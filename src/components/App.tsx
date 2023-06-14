@@ -2,11 +2,13 @@ import Swiper from "react-native-swiper";
 import Home from "./Home/Home";
 import { LayoutVariable } from "../common/layout";
 import { useWindowDimensions } from "react-native";
+import Footer from "./Footer/Footer";
 
 export default function App() {
   const windowDimensions = useWindowDimensions();
 
   return (
+    <>
     <Swiper
       autoplay={false}
       loop={false}
@@ -18,5 +20,7 @@ export default function App() {
     >
       <Home />
     </Swiper>
+    <Footer />
+    </>
   );
 }
