@@ -1,15 +1,9 @@
 import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import { LayoutVariable } from "../../common/layout";
 import TaskList from "./TaskList/TaskList";
-import { ProgressChart } from "react-native-chart-kit";
+import ProgressChart from "../common/ProgressChart";
 
-const chartConfig = {
-  backgroundGradientFromOpacity: 0,
-  backgroundGradientToOpacity: 0,
-  color: (opacity = 1) => LayoutVariable.color.backgroundOpacity(opacity * 2),
-};
-
-const chartSize = 120;
+const progressChartSize = 120;
 
 export default function Home() {
   const windowDimensions = useWindowDimensions();
@@ -33,21 +27,7 @@ export default function Home() {
           height: headerHeight,
         },
       ]}>
-        <View style={styles.chartWrapper}>
-          <ProgressChart
-            style={styles.chart}
-            data={[todayProgressRatio]}
-            width={chartSize}
-            height={chartSize}
-            strokeWidth={16}
-            radius={40}
-            chartConfig={chartConfig}
-            hideLegend={true}
-          />
-          <Text style={styles.chartText}>
-            {`${todayProgressRatio}%`}
-          </Text>
-        </View>
+        <ProgressChart ratio={todayProgressRatio} size={progressChartSize} radius={40} />
       </View>
       <ScrollView style={{
         height: bodyHeight,
@@ -77,22 +57,5 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     paddingTop: LayoutVariable.statusBarHeight,
-  },
-  chartWrapper: {
-    alignItems: 'center',
-    display: 'flex',
-    height: chartSize,
-    justifyContent: 'center',
-    width: chartSize,
-  },
-  chart: {
-    left: 0,
-    position: 'absolute',
-    top: 0,
-  },
-  chartText: {
-    color: '#888',
-    fontSize: 20,
-    fontWeight: 'bold',
   },
 });
