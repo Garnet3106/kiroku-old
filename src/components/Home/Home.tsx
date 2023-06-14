@@ -3,8 +3,6 @@ import { LayoutVariable } from "../../common/layout";
 import TaskList from "./TaskList/TaskList";
 import ProgressChart from "../common/ProgressChart";
 
-const progressChartSize = 120;
-
 export default function Home() {
   const windowDimensions = useWindowDimensions();
   const height = windowDimensions.width * 0.5;
@@ -27,7 +25,11 @@ export default function Home() {
           height: headerHeight,
         },
       ]}>
-        <ProgressChart ratio={todayProgressRatio} size={progressChartSize} radius={40} />
+        <ProgressChart
+          ratio={todayProgressRatio}
+          wrapperSize={LayoutVariable.progressChart.wrapperSize}
+          radius={LayoutVariable.progressChart.radius}
+        />
       </View>
       <ScrollView style={{
         height: bodyHeight,
@@ -53,7 +55,7 @@ const styles = StyleSheet.create({
   container: {},
   header: {
     alignItems: 'center',
-    backgroundColor: '#ddd',
+    backgroundColor: LayoutVariable.color.background,
     display: 'flex',
     justifyContent: 'center',
     paddingTop: LayoutVariable.statusBarHeight,

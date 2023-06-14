@@ -3,6 +3,7 @@ import Home from "./Home/Home";
 import { LayoutVariable } from "../common/layout";
 import { useWindowDimensions } from "react-native";
 import Footer from "./Footer/Footer";
+import TaskLog from "./Home/TaskLog/TaskLog";
 
 export default function App() {
   const windowDimensions = useWindowDimensions();
@@ -19,6 +20,7 @@ export default function App() {
       onMomentumScrollEnd={() => {}}
     >
       <Home />
+      <TaskLog />
     </Swiper>
     <Footer />
     </>

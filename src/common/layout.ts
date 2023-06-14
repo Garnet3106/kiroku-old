@@ -11,8 +11,12 @@ export namespace LayoutVariable {
   export const color = {
     white: '#ffffff',
     background: '#179f7e',
-    backgroundOpacity: (opacity: number) => `rgba(23, 159, 126, ${opacity})`,
     grayFont: '#999999',
     grayFontOnBackground: '#aecbc4',
+  };
+
+  export const progressChart = {
+    wrapperSize: 100,
+    radius: 40,
   };
 }
