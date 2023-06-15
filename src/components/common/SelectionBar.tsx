@@ -43,12 +43,12 @@ export default function SelectionBar(props: SelectionBarProps) {
         width: itemWidth,
       },
       index === 0 && props.selected === 0 && {
-        borderTopLeftRadius: LayoutVariable.borderRadius,
-        borderBottomLeftRadius: LayoutVariable.borderRadius,
+        borderTopLeftRadius: LayoutVariable.borderRadius - 1,
+        borderBottomLeftRadius: LayoutVariable.borderRadius - 1,
       },
       index === props.items.length - 1 && props.selected === props.items.length - 1 && {
-        borderTopRightRadius: LayoutVariable.borderRadius,
-        borderBottomRightRadius: LayoutVariable.borderRadius,
+        borderTopRightRadius: LayoutVariable.borderRadius - 1,
+        borderBottomRightRadius: LayoutVariable.borderRadius - 1,
       },
       index !== props.items.length - 1 && {
         borderRightColor: LayoutVariable.color.background,

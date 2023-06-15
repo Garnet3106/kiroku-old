@@ -2,8 +2,14 @@ import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import { LayoutVariable } from "../../../common/layout";
 import ProgressChart from "../../common/ProgressChart";
 import SelectionBar from "../../common/SelectionBar";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../common/redux/slices";
+import { Task } from "../../../common/task";
 
 export default function TaskLog() {
+  const tasks = useSelector((state: RootState) => state.tasks);
+  const todayProgressRatio = Task.getTodayProgressRatio(tasks);
+
   const windowDimensions = useWindowDimensions();
   const height = windowDimensions.width * 0.5;
   const containerHeight = windowDimensions.height - LayoutVariable.footerHeight;
@@ -44,10 +50,10 @@ export default function TaskLog() {
           </View>
           <View style={styles.chartWrapper}>
             <Text style={styles.chartTitle}>
-              今週
+              今日
             </Text>
             <ProgressChart
-              ratio={0}
+              ratio={todayProgressRatio}
               wrapperSize={LayoutVariable.progressChart.wrapperSize}
               radius={LayoutVariable.progressChart.radius}
               style={{
