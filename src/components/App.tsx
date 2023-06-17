@@ -6,6 +6,7 @@ import Footer from "./Footer/Footer";
 import TaskLog from "./Home/TaskLog/TaskLog";
 import { Provider } from "react-redux";
 import { store } from "../common/redux/redux";
+import TimeCounter from "./TimeCounter/TimeCounter";
 
 export default function App() {
   const windowDimensions = useWindowDimensions();
@@ -25,6 +26,7 @@ export default function App() {
         <TaskLog />
       </Swiper>
       <Footer />
+      <TimeCounter />
     </Provider>
   );
 }

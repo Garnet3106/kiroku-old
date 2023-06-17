@@ -1,8 +1,8 @@
-import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import { StyleSheet, Text, TouchableWithoutFeedback, View, useWindowDimensions } from "react-native";
 import { Task, TaskDate, TaskProgress } from "../../../common/task";
 import { LayoutVariable } from "../../../common/layout";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../common/redux/redux";
+import { RootState, action, store } from "../../../common/redux/redux";
 
 export type TaskItemProps = {
   task: Task,
@@ -21,36 +21,42 @@ export default function TaskItem(props: TaskItemProps) {
   const todayProgressPercentage = Math.floor(todayProgressStats.ratio * 100);
 
   return (
-    <View style={[
-      styles.container,
-      {
-        width: windowDimensions.width - (LayoutVariable.margin * 2),
-      },
-    ]}>
-      <View style={styles.top}>
-        <View style={styles.topLeft}>
-          <View style={styles.icon} />
-          <Text style={styles.name}>
-            {props.task.name}
+    <TouchableWithoutFeedback onPress={startTimeCounter}>
+      <View style={[
+        styles.container,
+        {
+          width: windowDimensions.width - (LayoutVariable.margin * 2),
+        },
+      ]}>
+        <View style={styles.top}>
+          <View style={styles.topLeft}>
+            <View style={styles.icon} />
+            <Text style={styles.name}>
+              {props.task.name}
+            </Text>
+          </View>
+          <Text style={styles.time}>
+            {`${todayProgressStats.timeSum ?? 0}分/${props.task.targetTime}分`}
           </Text>
         </View>
-        <Text style={styles.time}>
-          {`${todayProgressStats.timeSum ?? 0}分/${props.task.targetTime}分`}
+        <View style={styles.progressBar}>
+          <View style={{
+            backgroundColor: LayoutVariable.color.grayFontOnBackground,
+            borderRadius: LayoutVariable.borderRadius,
+            height: '100%',
+            width: `${todayProgressPercentage <= 100 ? todayProgressPercentage : 100}%`,
+          }} />
+        </View>
+        <Text style={styles.caption}>
+          作業をはじめる
         </Text>
       </View>
-      <View style={styles.progressBar}>
-        <View style={{
-          backgroundColor: LayoutVariable.color.grayFontOnBackground,
-          borderRadius: LayoutVariable.borderRadius,
-          height: '100%',
-          width: `${todayProgressPercentage <= 100 ? todayProgressPercentage : 100}%`,
-        }} />
-      </View>
-      <Text style={styles.caption}>
-        作業をはじめる
-      </Text>
-    </View>
+    </TouchableWithoutFeedback>
   );
+
+  function startTimeCounter() {
+    store.dispatch(action.taskInProgress.open(props.task));
+  }
 }
 
 const styles = StyleSheet.create({

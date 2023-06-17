@@ -6,13 +6,13 @@ const initialState: Task[] = [
   {
     id: 'task1',
     targetTime: 60,
-    name: '基本情報の勉強',
+    name: 'TOEICの勉強',
     archived: false,
   },
   {
     id: uuid.v4() as string,
     targetTime: 10,
-    name: '瞑想',
+    name: '小説を読み切る',
     archived: false,
   },
   {
