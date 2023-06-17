@@ -1,6 +1,8 @@
 import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
-import { Task } from "../../../common/task";
+import { Task, TaskDate, TaskProgress } from "../../../common/task";
 import { LayoutVariable } from "../../../common/layout";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../common/redux/redux";
 
 export type TaskItemProps = {
   task: Task,
@@ -10,8 +12,13 @@ const progressBarHeight = 30;
 
 export default function TaskItem(props: TaskItemProps) {
   const windowDimensions = useWindowDimensions();
-  const progressRatio = props.task.targetTime === 0 ? 1 : (props.task.currentTime / props.task.targetTime);
-  const progressPercentage = Math.floor(progressRatio * 100);
+
+  const tasks = useSelector((state: RootState) => state.tasks);
+  const todayDate = TaskDate.getToday();
+  const taskProgress = useSelector((state: RootState) => state.taskProgress);
+  const todayProgress = taskProgress.filter(({ taskId, date }) => taskId === props.task.id && TaskDate.isEqual(date, todayDate));
+  const todayProgressStats = TaskProgress.getProgressStats(tasks, todayProgress, props.task.targetTime);
+  const todayProgressPercentage = Math.floor(todayProgressStats.ratio * 100);
 
   return (
     <View style={[
@@ -28,7 +35,7 @@ export default function TaskItem(props: TaskItemProps) {
           </Text>
         </View>
         <Text style={styles.time}>
-          {`${props.task.currentTime}分/${props.task.targetTime}分`}
+          {`${todayProgressStats.timeSum ?? 0}分/${props.task.targetTime}分`}
         </Text>
       </View>
       <View style={styles.progressBar}>
@@ -36,7 +43,7 @@ export default function TaskItem(props: TaskItemProps) {
           backgroundColor: LayoutVariable.color.grayFontOnBackground,
           borderRadius: LayoutVariable.borderRadius,
           height: '100%',
-          width: `${progressPercentage}%`,
+          width: `${todayProgressPercentage}%`,
         }} />
       </View>
       <Text style={styles.caption}>

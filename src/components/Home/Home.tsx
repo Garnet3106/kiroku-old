@@ -3,15 +3,17 @@ import { LayoutVariable } from "../../common/layout";
 import TaskList from "./TaskList/TaskList";
 import ProgressChart from "../common/ProgressChart";
 import { useSelector } from "react-redux";
-import { RootState } from "../../common/redux/slices";
-import { Task } from "../../common/task";
+import { RootState } from "../../common/redux/redux";
+import { Task, TaskProgress } from "../../common/task";
 
 export default function Home() {
   const tasks = useSelector((state: RootState) => state.tasks);
+  const taskProgress = useSelector((state: RootState) => state.taskProgress);
+  const todayProgress = TaskProgress.getTodayProgress(taskProgress);
+  const todayProgressStats = TaskProgress.getProgressStats(tasks, todayProgress, Task.getTargetTimeSum(tasks));
 
   const windowDimensions = useWindowDimensions();
   const height = windowDimensions.width * 0.5;
-  const todayProgressRatio = Task.getTodayProgressRatio(tasks);
 
   const containerHeight = windowDimensions.height - LayoutVariable.footerHeight;
   const headerHeight = LayoutVariable.statusBarHeight + height;
@@ -31,7 +33,7 @@ export default function Home() {
         },
       ]}>
         <ProgressChart
-          ratio={todayProgressRatio}
+          ratio={todayProgressStats.ratio}
           wrapperSize={LayoutVariable.progressChart.wrapperSize}
           radius={LayoutVariable.progressChart.radius}
         />
@@ -39,7 +41,7 @@ export default function Home() {
       <ScrollView style={{
         height: bodyHeight,
       }}>
-        <TaskList tasks={tasks} />
+        <TaskList tasks={tasks.filter((v) => !v.archived)} />
       </ScrollView>
     </View>
   );

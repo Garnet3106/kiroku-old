@@ -3,12 +3,17 @@ import { LayoutVariable } from "../../../common/layout";
 import ProgressChart from "../../common/ProgressChart";
 import SelectionBar from "../../common/SelectionBar";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../common/redux/slices";
-import { Task } from "../../../common/task";
+import { RootState } from "../../../common/redux/redux";
+import { Task, TaskProgress } from "../../../common/task";
 
 export default function TaskLog() {
   const tasks = useSelector((state: RootState) => state.tasks);
-  const todayProgressRatio = Task.getTodayProgressRatio(tasks);
+  const taskProgress = useSelector((state: RootState) => state.taskProgress);
+  const todayProgress = TaskProgress.getTodayProgress(taskProgress);
+  const todayProgressStats = TaskProgress.getProgressStats(tasks, todayProgress, Task.getTargetTimeSum(tasks));
+
+  const numberOfTodayTasks = tasks.filter((v) => !v.archived).length;
+  const numberOfTodayCompletedTasks = Task.getCompletedTasks(tasks, todayProgress).length;
 
   const windowDimensions = useWindowDimensions();
   const height = windowDimensions.width * 0.5;
@@ -30,7 +35,7 @@ export default function TaskLog() {
         },
       ]}>
         <Text style={styles.description}>
-          {`${10}個中${0}個のタスクが完了`}
+          {`${numberOfTodayTasks}個中${numberOfTodayCompletedTasks}個のタスクが完了`}
         </Text>
         <View style={styles.charts}>
           <View style={[
@@ -53,7 +58,7 @@ export default function TaskLog() {
               今日
             </Text>
             <ProgressChart
-              ratio={todayProgressRatio}
+              ratio={todayProgressStats.ratio}
               wrapperSize={LayoutVariable.progressChart.wrapperSize}
               radius={LayoutVariable.progressChart.radius}
               style={{
