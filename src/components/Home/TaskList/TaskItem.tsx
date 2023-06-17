@@ -43,7 +43,7 @@ export default function TaskItem(props: TaskItemProps) {
           backgroundColor: LayoutVariable.color.grayFontOnBackground,
           borderRadius: LayoutVariable.borderRadius,
           height: '100%',
-          width: `${todayProgressPercentage}%`,
+          width: `${todayProgressPercentage <= 100 ? todayProgressPercentage : 100}%`,
         }} />
       </View>
       <Text style={styles.caption}>
