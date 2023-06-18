@@ -8,8 +8,6 @@ export type TaskItemProps = {
   task: Task,
 };
 
-const progressBarHeight = 30;
-
 export default function TaskItem(props: TaskItemProps) {
   const windowDimensions = useWindowDimensions();
 
@@ -95,8 +93,8 @@ const styles = StyleSheet.create({
   progressBar: {
     backgroundColor: LayoutVariable.color.white,
     borderRadius: LayoutVariable.borderRadius,
-    height: progressBarHeight,
-    marginVertical: LayoutVariable.margin / 2,
+    height: 15,
+    marginVertical: 8,
     width: '100%',
   },
   caption: {
