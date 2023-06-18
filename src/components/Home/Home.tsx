@@ -32,6 +32,26 @@ export default function Home() {
           height: headerHeight,
         },
       ]}>
+        <View style={{
+          alignItems: 'center',
+          display: 'flex',
+          flexDirection: 'row',
+          marginBottom: 15,
+        }}>
+          <View style={styles.level}>
+            <Text style={styles.levelText}>
+              {'lv\n15'}
+            </Text>
+          </View>
+          <View>
+            <Text style={styles.userTitle}>
+              ニューチャレンジャー
+            </Text>
+            <Text style={styles.levelCaption}>
+              lv16まであと10pt
+            </Text>
+          </View>
+        </View>
         <ProgressChart
           ratio={todayProgressStats.ratio}
           wrapperSize={LayoutVariable.progressChart.wrapperSize}
@@ -55,5 +75,35 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     paddingTop: LayoutVariable.statusBarHeight,
+  },
+  level: {
+    alignItems: 'center',
+    backgroundColor: LayoutVariable.color.white,
+    display: 'flex',
+    height: 35,
+    justifyContent: 'center',
+    marginRight: 15,
+    transform: [{
+      rotate: '45deg',
+    }],
+    width: 35,
+  },
+  levelText: {
+    color: LayoutVariable.color.background,
+    fontSize: 16,
+    fontWeight: 'bold',
+    lineHeight: 16,
+    textAlign: 'center',
+    transform: [{
+      rotate: '-45deg',
+    }],
+  },
+  userTitle: {
+    color: LayoutVariable.color.white,
+    fontSize: 22,
+    fontWeight: 'bold',
+  },
+  levelCaption: {
+    color: LayoutVariable.color.white,
   },
 });
