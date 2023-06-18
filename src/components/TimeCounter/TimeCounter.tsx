@@ -5,6 +5,7 @@ import Swiper from "react-native-swiper";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState, action, store } from "../../common/redux/redux";
+import { TaskDate } from "../../common/task";
 
 export const buttonSize = 60;
 
@@ -143,6 +144,19 @@ export default function TimeCounter() {
   function finish() {
     setTimerEnabled(false);
     swiperRef.current?.scrollTo(2);
+
+    if (!taskInProgress) {
+      return;
+    }
+
+    const progress = {
+      taskId: taskInProgress.id,
+      date: TaskDate.getToday(),
+      targetTime: taskInProgress.targetTime,
+      time: Math.floor(timeInSeconds / 60),
+    };
+
+    store.dispatch(action.taskProgress.add(progress));
   }
 
   function close() {
