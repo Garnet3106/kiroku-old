@@ -6,11 +6,14 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState, action, store } from "../../common/redux/redux";
 import { TaskDate } from "../../common/task";
+import * as Animatable from "react-native-animatable";
 
 export const buttonSize = 60;
 
 export default function TimeCounter() {
   const windowDimensions = useWindowDimensions();
+  const containerRef = useRef<any>();
+  const latestContainerTop = useRef(windowDimensions.height);
   const swiperRef = useRef<Swiper>();
 
   const taskInProgress = useSelector((state: RootState) => state.taskInProgress);
@@ -31,8 +34,26 @@ export default function TimeCounter() {
   }, [timerEnabled]);
 
   useEffect(() => {
-    swiperRef.current?.scrollTo(0);
-    setTimeInSeconds(0);
+    // Delay time counter closing.
+    const delay = taskInProgress ? 0 : LayoutVariable.animationDuration;
+
+    setTimeout(() => {
+      swiperRef.current?.scrollTo(0);
+      setTimeInSeconds(0);
+    }, delay);
+
+    const newContainerTop = taskInProgress ? 0 : windowDimensions.height;
+
+    containerRef.current?.animate({
+      0: {
+        top: latestContainerTop.current,
+      },
+      1: {
+        top: newContainerTop,
+      },
+    });
+
+    latestContainerTop.current = newContainerTop;
   }, [taskInProgress]);
 
   const contentStyle = {
@@ -41,12 +62,16 @@ export default function TimeCounter() {
   };
 
   return (
-    <View style={[
-      styles.container,
-      {
-        top: taskInProgress ? 0 : windowDimensions.height,
-      },
-    ]}>
+    <Animatable.View
+      style={[
+        styles.container,
+        {
+          top: windowDimensions.height,
+        },
+      ]}
+      duration={LayoutVariable.animationDuration}
+      ref={containerRef}
+    >
       <Swiper
         autoplay={false}
         loop={false}
@@ -117,7 +142,7 @@ export default function TimeCounter() {
           </View>
         </View>
       </Swiper>
-    </View>
+    </Animatable.View>
   );
 
   function getTimeString(timeInSeconds: number, includeSeconds?: boolean): string {

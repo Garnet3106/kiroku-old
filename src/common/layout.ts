@@ -1,6 +1,8 @@
 import { Platform, StatusBar } from "react-native";
 
 export namespace LayoutVariable {
+  export const animationDuration = 250;
+
   export const statusBarHeight = Platform.OS === 'android' ? (StatusBar.currentHeight ?? 0) : 0;
   export const footerHeight = 60;
 
