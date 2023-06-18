@@ -15,18 +15,19 @@ export default function TimeCounter() {
   const taskInProgress = useSelector((state: RootState) => state.taskInProgress);
   const targetTimeInSeconds = (taskInProgress?.targetTime ?? 0) * 60;
   const [timeInSeconds, setTimeInSeconds] = useState(0);
-  const timer = useRef<NodeJS.Timer>();
-  const enableTimer = useRef(false);
+  const [timerEnabled, setTimerEnabled] = useState(false);
 
   useEffect(() => {
-    if (!timer.current) {
-      timer.current = setInterval(() => {
-        if (enableTimer.current) {
-          setTimeInSeconds((state) => state + 1);
-        }
-      }, 1000);
-    }
-  }, []);
+    const interval = setInterval(() => {
+      if (timerEnabled) {
+        setTimeInSeconds((state) => state + 1);
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [timerEnabled]);
 
   useEffect(() => {
     swiperRef.current?.scrollTo(0);
@@ -82,7 +83,7 @@ export default function TimeCounter() {
             {getTimeString(timeInSeconds, true)}
           </Text>
           <View style={styles.bottom}>
-            <TouchableOpacity activeOpacity={0.5}>
+            <TouchableOpacity activeOpacity={0.5} onPress={stopOrResume}>
               <View style={styles.button} />
             </TouchableOpacity>
             <TouchableOpacity activeOpacity={0.5} onPress={finish}>
@@ -131,12 +132,16 @@ export default function TimeCounter() {
   }
 
   function start() {
-    enableTimer.current = true;
+    setTimerEnabled(true);
     swiperRef.current?.scrollTo(1);
   }
 
+  function stopOrResume() {
+    setTimerEnabled((state) => !state);
+  }
+
   function finish() {
-    enableTimer.current = false;
+    setTimerEnabled(false);
     swiperRef.current?.scrollTo(2);
   }
 
