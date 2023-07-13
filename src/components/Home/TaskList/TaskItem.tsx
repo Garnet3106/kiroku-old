@@ -3,6 +3,7 @@ import { Task, TaskDate, TaskProgress } from "../../../common/task";
 import { LayoutVariable } from "../../../common/layout";
 import { useSelector } from "react-redux";
 import { RootState, action, store } from "../../../common/redux/redux";
+import { Storage } from "../../../common/storage";
 
 export type TaskItemProps = {
   task: Task,
@@ -53,6 +54,7 @@ export default function TaskItem(props: TaskItemProps) {
   );
 
   function startTimeCounter() {
+    Storage.setItem(Storage.ItemKey.TaskInProgress, store.getState().taskInProgress);
     store.dispatch(action.taskInProgress.open(props.task));
   }
 }

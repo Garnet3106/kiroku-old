@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableHighlight, TouchableOpacity, useWindowDimensions } from "react-native";
+import { AppState, StyleSheet, Text, TouchableHighlight, TouchableOpacity, useWindowDimensions } from "react-native";
 import { View } from "react-native";
 import { LayoutVariable } from "../../common/layout";
 import Swiper from "react-native-swiper";
@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState, action, store } from "../../common/redux/redux";
 import { TaskDate } from "../../common/task";
 import * as Animatable from "react-native-animatable";
+import { Storage } from "../../common/storage";
 
 export const buttonSize = 60;
 
@@ -20,6 +21,7 @@ export default function TimeCounter() {
   const targetTimeInSeconds = (taskInProgress?.targetTime ?? 0) * 60;
   const [timeInSeconds, setTimeInSeconds] = useState(0);
   const [timerEnabled, setTimerEnabled] = useState(false);
+  const backgroundTransitionInSeconds = useRef(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -32,6 +34,23 @@ export default function TimeCounter() {
       clearInterval(interval);
     };
   }, [timerEnabled]);
+
+  const getCurrentTimestamp = () => Math.floor(Date.now() / 1000);
+
+  useEffect(() => {
+    AppState.addEventListener('change', (state) => {
+      switch (state) {
+        case 'active':
+        const additionalSeconds = getCurrentTimestamp() - backgroundTransitionInSeconds.current;
+        setTimeInSeconds((state) => state + additionalSeconds);
+        break;
+
+        case 'background':
+        backgroundTransitionInSeconds.current = getCurrentTimestamp();
+        break;
+      }
+    });
+  }, []);
 
   useEffect(() => {
     // Delay time counter closing.
@@ -182,10 +201,12 @@ export default function TimeCounter() {
     };
 
     store.dispatch(action.taskProgress.add(progress));
+    Storage.setItem(Storage.ItemKey.TaskProgress, store.getState().taskProgress);
   }
 
   function close() {
     store.dispatch(action.taskInProgress.close());
+    Storage.setItem(Storage.ItemKey.TaskInProgress, store.getState().taskInProgress);
   }
 }
 

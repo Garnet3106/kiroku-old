@@ -26,6 +26,7 @@ const taskProgressMapSlice = createSlice({
   name: 'taskProgressMap',
   initialState,
   reducers: {
+    set: (_state, action: PayloadAction<TaskProgress[]>) => action.payload,
     add: (state, action: PayloadAction<TaskProgress>) => {
       const newState = state.concat();
       newState.push(action.payload);
