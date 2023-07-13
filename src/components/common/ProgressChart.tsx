@@ -29,7 +29,7 @@ export default function ProgressChart(props: ProgressChartProps) {
     ]}>
       <ChartKitProgressChart
         style={styles.chart}
-        data={[props.ratio]}
+        data={[props.ratio <= 1 ? props.ratio : 1]}
         width={props.wrapperSize}
         height={props.wrapperSize}
         strokeWidth={16}
