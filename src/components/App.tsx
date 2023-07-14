@@ -9,6 +9,9 @@ import { RootState, action, store } from "../common/redux/redux";
 import TimeCounter from "./TimeCounter/TimeCounter";
 import { useEffect } from "react";
 import { Storage } from "../common/storage";
+import * as SplashScreen from 'expo-splash-screen';
+
+SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const windowDimensions = useWindowDimensions();
@@ -17,9 +20,12 @@ export default function App() {
   const taskInProgress = useSelector((state: RootState) => state.taskInProgress);
 
   useEffect(() => {
-    Storage.getItem(Storage.ItemKey.Tasks, tasks).then((v) => store.dispatch(action.tasks.set(v)));
-    Storage.getItem(Storage.ItemKey.TaskProgress, taskProgress).then((v) => store.dispatch(action.taskProgress.set(v)));
-    Storage.getItem(Storage.ItemKey.TaskInProgress, taskInProgress).then((v) => store.dispatch(action.taskInProgress.set(v)));
+    (async () => {
+      store.dispatch(action.tasks.set(await Storage.getItem(Storage.ItemKey.Tasks, tasks)));
+      store.dispatch(action.taskProgress.set(await Storage.getItem(Storage.ItemKey.TaskProgress, taskProgress)));
+      store.dispatch(action.taskInProgress.set(await Storage.getItem(Storage.ItemKey.TaskInProgress, taskInProgress)));
+      await SplashScreen.hideAsync();
+    })();
   }, []);
 
   return (
