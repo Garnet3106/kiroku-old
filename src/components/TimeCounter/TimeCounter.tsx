@@ -187,7 +187,8 @@ export default function TimeCounter() {
 
     const seconds = Math.floor(timeInSeconds - hoursInSeconds - minutesInSeconds);
 
-    return includeSeconds ? `${hours}:${minutes}:${seconds}` : `${hours}:${minutes}`;
+    const pad = (v: number) => v.toString().padStart(2, '0');
+    return includeSeconds ? `${pad(hours)}:${pad(minutes)}:${pad(seconds)}` : `${pad(hours)}:${pad(minutes)}`;
   }
 
   function start() {
