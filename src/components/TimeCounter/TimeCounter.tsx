@@ -8,6 +8,7 @@ import { RootState, action, store } from "../../common/redux/redux";
 import { TaskDate } from "../../common/task";
 import * as Animatable from "react-native-animatable";
 import { Storage } from "../../common/storage";
+import PieChart from "../common/PieChart";
 
 export const buttonSize = 60;
 
@@ -127,6 +128,19 @@ export default function TimeCounter() {
           <Text style={styles.time}>
             {getTimeString(timeInSeconds, true)}
           </Text>
+          <PieChart
+            data={[
+              {
+                color: LayoutVariable.color.background,
+                value: timeInSeconds,
+              },
+              {
+                color: LayoutVariable.color.grayFontOnBackground,
+                value: (taskInProgress?.targetTime ?? 0) * 60,
+              },
+            ]}
+            size={windowDimensions.width / 1.8}
+          />
           <View style={styles.bottom}>
             <TouchableOpacity activeOpacity={0.5} onPress={stopOrResume}>
               <View style={styles.button} />
