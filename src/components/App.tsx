@@ -7,7 +7,7 @@ import TaskLog from "./Home/TaskLog/TaskLog";
 import { useSelector } from "react-redux";
 import { RootState, action, store } from "../common/redux/redux";
 import TimeCounter from "./TimeCounter/TimeCounter";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Storage } from "../common/storage";
 import * as SplashScreen from 'expo-splash-screen';
 
@@ -28,6 +28,13 @@ export default function App() {
     })();
   }, []);
 
+  const swiperRef = useRef<Swiper>();
+  const topSwiperIndex = useSelector((state: RootState) => state.topSwiperIndex);
+
+  useEffect(() => {
+    swiperRef.current?.scrollTo(topSwiperIndex);
+  }, [topSwiperIndex]);
+
   return (
     <>
     <Swiper
@@ -37,7 +44,8 @@ export default function App() {
       style={{
         height: windowDimensions.height - LayoutVariable.footerHeight,
       }}
-      onMomentumScrollEnd={() => {}}
+      onMomentumScrollEnd={(_e, state) => store.dispatch(action.topSwiperIndex.swipeTo(state.index))}
+      ref={swiperRef as any}
     >
       <Home />
       <TaskLog />

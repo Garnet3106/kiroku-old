@@ -1,8 +1,10 @@
-import { StyleSheet, Text, View } from "react-native";
+import { ColorValue, GestureResponderEvent, StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
 import { LayoutVariable } from "../../common/layout";
 
 export type FooterItemProps = {
   text: string,
+  textColor: ColorValue,
+  onPress?: (event: GestureResponderEvent) => void,
   children?: JSX.Element | JSX.Element[],
 };
 
@@ -10,14 +12,21 @@ export const footerIconSize = LayoutVariable.footerHeight - 25;
 
 export default function FooterItem(props: FooterItemProps) {
   return (
-    <View style={styles.container}>
-      <View style={styles.icon}>
-        {props.children}
+    <TouchableWithoutFeedback onPress={props.onPress}>
+      <View style={styles.container}>
+        <View style={styles.icon}>
+          {props.children}
+        </View>
+        <Text style={[
+          styles.text,
+          {
+            color: props.textColor,
+          },
+        ]}>
+          {props.text}
+        </Text>
       </View>
-      <Text style={styles.text}>
-        {props.text}
-      </Text>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -34,7 +43,6 @@ const styles = StyleSheet.create({
     width: footerIconSize,
   },
   text: {
-    color: LayoutVariable.color.white,
     fontSize: 12,
     marginTop: 2,
   },
