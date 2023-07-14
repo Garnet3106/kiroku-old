@@ -11,6 +11,9 @@ export default function TaskLog() {
   const taskProgress = useSelector((state: RootState) => state.taskProgress);
   const todayProgress = TaskProgress.getTodayProgress(taskProgress);
   const todayProgressStats = TaskProgress.getProgressStats(tasks, todayProgress, Task.getTargetTimeSum(tasks));
+  const weeklyProgress = TaskProgress.getWeeklyProgress(taskProgress);
+  // fix targetTime
+  const weeklyProgressStats = TaskProgress.getProgressStats(tasks, weeklyProgress, Task.getTargetTimeSum(tasks) * 7);
 
   const numberOfTodayTasks = tasks.filter((v) => !v.archived).length;
   const numberOfTodayCompletedTasks = Task.getCompletedTasks(tasks, todayProgress).length;
@@ -48,7 +51,7 @@ export default function TaskLog() {
               今週
             </Text>
             <ProgressChart
-              ratio={0}
+              ratio={weeklyProgressStats.ratio}
               wrapperSize={LayoutVariable.progressChart.wrapperSize}
               radius={LayoutVariable.progressChart.radius}
             />

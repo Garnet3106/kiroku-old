@@ -1,3 +1,5 @@
+import { firstDayOfWeek } from "./date";
+
 const sumReducer = (previous: number, current: number) => previous + current;
 
 export type TaskDate = {
@@ -13,14 +15,31 @@ export namespace TaskDate {
       left.date === right.date;
   }
 
-  export function getToday(): TaskDate {
-    const date = new Date();
+  export function isInDateRange(source: TaskDate, from: Date, to: Date) {
+    const sourceTimestamp = toDate(source).getTime();
+    return from.getTime() <= sourceTimestamp && to.getTime() >= sourceTimestamp;
+  }
 
+  export function fromDate(date: Date): TaskDate {
     return {
       year: date.getFullYear(),
       month: date.getMonth(),
       date: date.getDate(),
     };
+  }
+
+  export function getToday(): TaskDate {
+    return fromDate(new Date());
+  }
+
+  export function toDate(date: TaskDate): Date {
+    return new Date(date.year, date.month, date.date);
+  }
+
+  export function getNextDate(date: TaskDate): TaskDate {
+    const newDate = toDate(date);
+    newDate.setDate(newDate.getDate() + 1);
+    return fromDate(newDate);
   }
 }
 
@@ -85,6 +104,16 @@ export namespace TaskProgress {
   export function getTodayProgress(progress: TaskProgress[]): TaskProgress[] {
     const date = TaskDate.getToday();
     return progress.filter((v) => TaskDate.isEqual(v.date, date));
+  }
+
+  export function getWeeklyProgress(progress: TaskProgress[]): TaskProgress[] {
+    const firstDateOfWeek = TaskDate.toDate(TaskDate.getToday());
+    firstDateOfWeek.setDate(firstDateOfWeek.getDate() - firstDateOfWeek.getDay() + firstDayOfWeek);
+
+    const lastDateOfWeek = new Date(firstDateOfWeek);
+    lastDateOfWeek.setDate(firstDateOfWeek.getDate() + 7);
+
+    return progress.filter((v) => TaskDate.isInDateRange(v.date, firstDateOfWeek, lastDateOfWeek));
   }
 
   export function getProgressStats(tasks: Task[], progress: TaskProgress[], targetTime: number): TaskProgressStats {
